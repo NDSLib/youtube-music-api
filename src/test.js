@@ -21,9 +21,13 @@ async function main() {
 
     let browse = await api.getBrowseData()
     // YoutubeMusicでいくところの、ホームに表示されるサムネイル・タイトル・サブタイトル
-    console.log(browse.getTabs()[0].getContents()[0].getThumbnails())
-    console.log(browse.getTabs()[0].getContents()[0].getTitle())
-    console.log(browse.getTabs()[0].getContents()[0].getSubTitle())
+
+    for (let i in browse.getTabs()[0].getContents()) {
+        console.log(`${i + 1}本目`)
+        console.log(browse.getTabs()[0].getContents()[i].getThumbnails())
+        console.log(browse.getTabs()[0].getContents()[i].getTitle())
+        console.log(browse.getTabs()[0].getContents()[i].getSubTitle())
+    }
 }
 
 main().then(r => console.log('END'))
