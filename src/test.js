@@ -1,6 +1,6 @@
 const youtubeMusicAPI = require('./YoutubeMusic')
 const video_js = require('./Video')
-const video = new video_js.Video('YDnZFwlZa1g')
+const video = new video_js.Video('xrDruN69QCw')
 const key = require('./config').key
 const api = new youtubeMusicAPI.YoutubeMusicAPI(key)
 
