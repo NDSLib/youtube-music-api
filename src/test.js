@@ -20,13 +20,20 @@ async function main() {
     }
 
     let browse = await api.getBrowseData()
-    // YoutubeMusicでいくところの、ホームに表示されるサムネイル・タイトル・サブタイトル
+    // YoutubeMusicでいくところの、ホームに表示されるサムネイル・タイトル・サブタイトル・動画直リン
 
     for (let i in browse.getTabs()[0].getContents()) {
-        console.log(`${i + 1}本目`)
-        console.log(browse.getTabs()[0].getContents()[i].getThumbnails())
-        console.log(browse.getTabs()[0].getContents()[i].getTitle())
-        console.log(browse.getTabs()[0].getContents()[i].getSubTitle())
+        console.log(`${parseInt(i) + 1}本目:`)
+        console.log('VideoId:' + browse.getTabs()[0].getContents()[i].getVideoID())
+        let link = await browse.getTabs()[0].getContents()[i].getVideo().getFormats(api)
+        console.log('PlayLink:' + link[0]['url'])
+        console.log('Thumbnails:')
+        for (let o in browse.getTabs()[0].getContents()[i].getThumbnails()) {
+            console.log(`Thumbnail[${o}]:` + browse.getTabs()[0].getContents()[i].getThumbnails()[o]['url'])
+        }
+        console.log('Title:' + browse.getTabs()[0].getContents()[i].getTitle())
+        console.log('SubTitle:' + browse.getTabs()[0].getContents()[i].getSubTitle())
+        console.log('')
     }
 }
 

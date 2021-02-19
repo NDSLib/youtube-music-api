@@ -1,4 +1,6 @@
 const axios = require('axios')
+const video_js = require('./Video')
+
 
 class YoutubeMusicAPI {
     playerData = JSON.parse('{"videoId":"Rkrm5foi188","context":{"client":{"hl":"ja","gl":"JP","remoteHost":"113.39.146.225","deviceMake":"","deviceModel":"","visitorData":"CgtnWXVtd0c1eUZUOCizjbGBBg%3D%3D","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0,gzip(gfe)","clientName":"WEB_REMIX","clientVersion":"0.1","osName":"Windows","osVersion":"10.0","originalUrl":"https://music.youtube.com/","platform":"DESKTOP","gfeFrontlineInfo":"vip=216.58.197.206,server_port=443,client_port=49562,tcp_connection_request_count=0,header_order=HUALEC,gfe_version=2.708.2,ssl,ssl_info=TLSv1.3:RA:F,tlsext=S,sni=music.youtube.com,hex_encoded_client_hello=130113031302c02bc02fcca9cca8c02cc030c00ac009c013c014009c009d002f0035000a-00-00000017ff01000a000b001000050033002b000d002d001c0029,c=1301,pn=alpn,ja3=df208241e7f3897d4ca38cfe68eabb21,rtt_source=tcp,rtt=4,srtt=4,client_protocol=h2,client_transport=tcp,first_request=1,ip_block_version=1,ip_block_index=2049063,gfe=acnrtc12.prod.google.com,pzf=Windows NT kernel [4:118+10:0:1460:mss*44/0:mss/nop/nop/sok:df/id+:0] [generic tos:0x20],vip_region=default,asn=17506,cc=JP,eid=s0YsYKDNIYyL8QfngIzYDA,scheme=https","clientFormFactor":"UNKNOWN_FORM_FACTOR","userInterfaceTheme":"USER_INTERFACE_THEME_DARK","timeZone":"Asia/Tokyo","browserName":"Firefox","browserVersion":"86.0","screenWidthPoints":1920,"screenHeightPoints":966,"screenPixelDensity":1,"screenDensityFloat":1,"utcOffsetMinutes":540,"clientScreen":"WATCH_FULL_SCREEN","playerType":"UNIPLAYER","tvAppInfo":{"livingRoomAppMode":"LIVING_ROOM_APP_MODE_UNSPECIFIED"}},"user":{"lockedSafetyMode":false},"request":{"useSsl":true,"internalExperimentFlags":[],"consistencyTokenJars":[]},"clickTracking":{"clickTrackingParams":"CO0BEKCzAhgAIhMI193Jzrnv7gIVg4XCCh05Ywxl"},"clientScreenNonce":"MC41MzI4NjczNzg1MjA0ODg0","adSignalsInfo":{"params":[{"key":"dt","value":"1613514422701"},{"key":"flash","value":"0"},{"key":"frm","value":"0"},{"key":"u_tz","value":"540"},{"key":"u_his","value":"4"},{"key":"u_java","value":"false"},{"key":"u_h","value":"1080"},{"key":"u_w","value":"1920"},{"key":"u_ah","value":"1040"},{"key":"u_aw","value":"1920"},{"key":"u_cd","value":"24"},{"key":"u_nplug","value":"0"},{"key":"u_nmime","value":"0"},{"key":"bc","value":"31"},{"key":"bih","value":"966"},{"key":"biw","value":"1903"},{"key":"brdim","value":"-1928,-331,-1928,-331,1920,-323,1936,1056,1920,966"},{"key":"vis","value":"1"},{"key":"wgl","value":"true"},{"key":"ca_type","value":"image"}]}},"playbackContext":{"contentPlaybackContext":{"html5Preference":"HTML5_PREF_WANTS","lactMilliseconds":"27","referer":"https://music.youtube.com/","signatureTimestamp":18669,"autoCaptionsDefaultOn":false,"liveContext":{"startWalltime":"0"}}},"cpn":"isAtEBxDCnGENsfx","playlistId":"RDAMVMRkrm5foi188"}')
@@ -138,7 +140,6 @@ class VideoItem {
         for (let o in data) {
             s += data[o]['text']
         }
-
         return s
     }
 
@@ -148,8 +149,19 @@ class VideoItem {
         for (let o in data) {
             s += data[o]['text']
         }
-
         return s
+    }
+
+    getVideoID(){
+        return this.json['navigationEndpoint']['watchEndpoint']['videoId']
+    }
+
+    getVideo(){
+        return new video_js.Video(this.getVideoID())
+    }
+
+    getPlayListID(){
+        return this.json['navigationEndpoint']['watchEndpoint']['playlistId']
     }
 }
 
