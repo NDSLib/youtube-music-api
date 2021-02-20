@@ -51,7 +51,7 @@ async function main() {
     // }
 
     console.log("Opening First One...")
-    let video_link: string = (await search[0].getFormats(api))[0]['url']
+    let video_link: string = (await search[0].getFormats(api)).getFormatURL()
     await open(video_link)
 }
 

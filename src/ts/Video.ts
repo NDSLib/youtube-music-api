@@ -1,4 +1,5 @@
 import {YoutubeMusicAPI} from './YoutubeMusic'
+import {AdaptiveFormatsJSON, FormatsJSON} from "./JSONCollection";
 
 export class Video {
     videoId: String = ''
@@ -14,11 +15,11 @@ export class Video {
         return await api.player(this.videoId)
     }
 
-    async getFormats(api: YoutubeMusicAPI) {
+    async getFormats(api: YoutubeMusicAPI) : Promise<FormatsJSON>{
         return await api.getFormats(this.videoId)
     }
 
-    async getAdaptiveFormats(api: YoutubeMusicAPI) {
+    async getAdaptiveFormats(api: YoutubeMusicAPI) : Promise<AdaptiveFormatsJSON>{
         return await api.getAdaptiveFormats(this.videoId)
     }
 
@@ -26,7 +27,7 @@ export class Video {
         return await api.next(this.videoId)
     }
 
-    async getVideoDetail(api: YoutubeMusicAPI) {
+    async getVideoDetail(api: YoutubeMusicAPI) : Promise<VideoDetail>{
         let data = await this.player(api)
         return new VideoDetail(data['data']['videoDetails'])
     }
