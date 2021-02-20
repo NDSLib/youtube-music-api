@@ -15,7 +15,7 @@ export class Video {
         return await api.player(this.videoId)
     }
 
-    async getFormats(api: YoutubeMusicAPI) : Promise<FormatsJSON>{
+    async getFormats(api: YoutubeMusicAPI) : Promise<FormatsJSON | null>{
         return await api.getFormats(this.videoId)
     }
 
