@@ -32,6 +32,8 @@ class YoutubeMusicAPI {
 
     browseData = JSON.parse('{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"0.1","hl":"ja","gl":"JP","experimentIds":[],"experimentsToken":"","browserName":"Firefox","browserVersion":"86.0","osName":"Windows","osVersion":"10.0","platform":"DESKTOP","utcOffsetMinutes":540,"locationInfo":{"locationPermissionAuthorizationStatus":"LOCATION_PERMISSION_AUTHORIZATION_STATUS_UNSUPPORTED"},"musicAppInfo":{"musicActivityMasterSwitch":"MUSIC_ACTIVITY_MASTER_SWITCH_INDETERMINATE","musicLocationMasterSwitch":"MUSIC_LOCATION_MASTER_SWITCH_INDETERMINATE","pwaInstallabilityStatus":"PWA_INSTALLABILITY_STATUS_UNKNOWN"}},"capabilities":{},"request":{"internalExperimentFlags":[],"sessionIndex":"1"},"activePlayers":{},"user":{"enableSafetyMode":false}},"browseId":"FEmusic_home"}')
 
+
+    searchData = JSON.parse('{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"0.1","hl":"ja","gl":"JP","experimentIds":[],"experimentsToken":"","browserName":"Firefox","browserVersion":"86.0","osName":"Windows","osVersion":"10.0","platform":"DESKTOP","utcOffsetMinutes":540,"locationInfo":{"locationPermissionAuthorizationStatus":"LOCATION_PERMISSION_AUTHORIZATION_STATUS_UNSUPPORTED"},"musicAppInfo":{"musicActivityMasterSwitch":"MUSIC_ACTIVITY_MASTER_SWITCH_INDETERMINATE","musicLocationMasterSwitch":"MUSIC_LOCATION_MASTER_SWITCH_INDETERMINATE","pwaInstallabilityStatus":"PWA_INSTALLABILITY_STATUS_UNKNOWN"}},"capabilities":{},"request":{"internalExperimentFlags":[],"sessionIndex":"1"},"activePlayers":{},"user":{"enableSafetyMode":false}},"query":"マオ","suggestStats":{"validationStatus":"VALID","parameterValidationStatus":"VALID_PARAMETERS","clientName":"youtube-music","searchMethod":"ENTER_KEY","inputMethod":"KEYBOARD","originalQuery":"マオ","availableSuggestions":[{"index":0,"type":25},{"index":1,"type":0},{"index":2,"type":0},{"index":3,"type":0},{"index":4,"type":0},{"index":5,"type":0},{"index":6,"type":0}],"zeroPrefixEnabled":true,"firstEditTimeMsec":8701,"lastEditTimeMsec":17822}}')
     k = ''
 
     /**
@@ -62,9 +64,6 @@ class YoutubeMusicAPI {
     async next(videoId) {
         let data = JSON.parse(JSON.stringify(this.nextData))
         data['videoId'] = videoId
-        // 必要ないのでは
-        // data['playlistId'] = playListId
-        // data['index'] = index
         return await axios.post(`https://music.youtube.com/youtubei/v1/next?alt=json&key=${this.k}`, data, {headers: this.headers})
     }
 
@@ -74,6 +73,27 @@ class YoutubeMusicAPI {
 
     async getBrowseData() {
         return new BrowseData(await this.browse())
+    }
+
+    async search(query) {
+        let data = JSON.parse(JSON.stringify(this.searchData))
+        data['query'] = query
+        return await axios.post(`https://music.youtube.com/youtubei/v1/search?alt=json&key=${this.k}`, data, {headers: this.headers})
+    }
+
+    async searchVideos(query){
+        let data = await this.search(query)
+        let c = data['data']['contents']['sectionListRenderer']['contents']
+        let videos = []
+        for(let i in c){
+            let d = c[i]['musicShelfRenderer']['contents']
+            for(let l in d){
+                if(d[l]['musicResponsiveListItemRenderer']['playlistItemData'] !== undefined){
+                    videos.push(new video_js.Video(d[l]['musicResponsiveListItemRenderer']['playlistItemData']['videoId']))
+                }
+            }
+        }
+        return videos
     }
 }
 
@@ -107,7 +127,7 @@ class Tab {
             let r = []
             for (let o in data) {
                 for (let m in data[o]['musicCarouselShelfRenderer']['contents']) {
-                   r.push(new VideoItem(data[o]['musicCarouselShelfRenderer']['contents'][m]))
+                    r.push(new VideoItem(data[o]['musicCarouselShelfRenderer']['contents'][m]))
                 }
             }
             return r
@@ -152,15 +172,15 @@ class VideoItem {
         return s
     }
 
-    getVideoID(){
+    getVideoID() {
         return this.json['navigationEndpoint']['watchEndpoint']['videoId']
     }
 
-    getVideo(){
+    getVideo() {
         return new video_js.Video(this.getVideoID())
     }
 
-    getPlayListID(){
+    getPlayListID() {
         return this.json['navigationEndpoint']['watchEndpoint']['playlistId']
     }
 }
