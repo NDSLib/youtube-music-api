@@ -2,6 +2,7 @@ import {Video} from './Video'
 import open from "open";
 import {Tab, VideoItem} from './YoutubeMusic'
 import {getPlayList} from "./PlayList";
+import {getBrowseData} from "./BrowseData";
 
 const youtubeMusicAPI = require('./YoutubeMusic')
 const video_js = require('./Video')
@@ -66,9 +67,23 @@ async function main() {
     // await open(video_link)
 
     // プレイリスト内の動画一覧
-    let data = await getPlayList('RDAMVMB1gaZv8P-1w',api)
-    data.videos.forEach((it)=>{
-        console.log(`${it.getTitle()} ${it.getVideoID()}`)
+    // let data = await getPlayList('RDAMVMliAryLiZeqI',api)
+    // for (const it of data.videos) {
+    //     console.log(`Title:${it.getTitle()}`)
+    //     console.log(`VideoID:${it.getVideoID()}`)
+    //     let video = it.getAsVideo()
+    //     console.log(`Link:${(await video.getFormats(api))?.getFormatURL()}`)
+    //     console.log()
+    // }
+
+    //新Browse
+    let browse = await getBrowseData(api)
+    browse.contents.forEach((it) => {
+        console.log(`Title:${it.getTitle()}`)
+        console.log(`SubTitle:${it.getSubTitle()}`)
+        // console.log(`VideoID:${it.getVideoID()}`)
+        // console.log(`PlayListID:${it.getPlayListID()}`)
     })
 }
+
 main().then(r => console.log('END'))
