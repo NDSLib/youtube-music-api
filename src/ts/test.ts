@@ -1,6 +1,7 @@
 import {Video} from './Video'
 import open from "open";
 import {Tab, VideoItem} from './YoutubeMusic'
+import {getPlayList} from "./PlayList";
 
 const youtubeMusicAPI = require('./YoutubeMusic')
 const video_js = require('./Video')
@@ -50,19 +51,24 @@ async function main() {
     // }
 
     // 検索
-    let search: Array<Video> = await api.searchVideos('マオ')
-    for (let i in search) {
-        let detail = await search[i].getVideoDetail(api)
-        console.log(`Title:${detail.getTitle()}`)
-        for (let t in detail.getThumbnails()) {
-            console.log(`Thumbnail${t}:${detail.getThumbnails()[t]['url']}`)
-        }
-        console.log(`link:${(await search[i].getFormats(api))?.getFormatURL()}`)
-    }
+    // let search: Array<Video> = await api.searchVideos('マオ')
+    // for (let i in search) {
+    //     let detail = await search[i].getVideoDetail(api)
+    //     console.log(`Title:${detail.getTitle()}`)
+    //     for (let t in detail.getThumbnails()) {
+    //         console.log(`Thumbnail${t}:${detail.getThumbnails()[t]['url']}`)
+    //     }
+    //     console.log(`link:${(await search[i].getFormats(api))?.getFormatURL()}`)
+    // }
 
     // console.log("Opening First One...")
     // let video_link: string = (await search[0].getFormats(api)).getFormatURL()
     // await open(video_link)
-}
 
+    // プレイリスト内の動画一覧
+    let data = await getPlayList('RDAMVMB1gaZv8P-1w',api)
+    data.videos.forEach((it)=>{
+        console.log(`${it.getTitle()} ${it.getVideoID()}`)
+    })
+}
 main().then(r => console.log('END'))

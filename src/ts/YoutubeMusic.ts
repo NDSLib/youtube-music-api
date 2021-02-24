@@ -245,6 +245,8 @@ export class YoutubeMusicAPI {
         return await axios.post(`https://music.youtube.com/youtubei/v1/search?alt=json&key=${this.k}`, data, {headers: this.headers})
     }
 
+    // PlayList
+
     async searchVideos(query: String): Promise<Array<Video>> {
         let data = await this.search(query)
         let c = data['data']['contents']['sectionListRenderer']['contents']
@@ -259,6 +261,50 @@ export class YoutubeMusicAPI {
         }
         return videos
     }
+
+
+    async getPlayList(playListId: string) {
+        let data = {
+            "context": {
+                "client": {
+                    "clientName": "WEB_REMIX",
+                    "clientVersion": "0.1",
+                    "hl": "ja",
+                    "gl": "JP",
+                    "experimentIds": [],
+                    "experimentsToken": "",
+                    "browserName": "Firefox",
+                    "browserVersion": "86.0",
+                    "osName": "Windows",
+                    "osVersion": "10.0",
+                    "platform": "DESKTOP",
+                    "utcOffsetMinutes": 540,
+                    "locationInfo": {"locationPermissionAuthorizationStatus": "LOCATION_PERMISSION_AUTHORIZATION_STATUS_UNSUPPORTED"},
+                    "musicAppInfo": {
+                        "musicActivityMasterSwitch": "MUSIC_ACTIVITY_MASTER_SWITCH_INDETERMINATE",
+                        "musicLocationMasterSwitch": "MUSIC_LOCATION_MASTER_SWITCH_INDETERMINATE",
+                        "pwaInstallabilityStatus": "PWA_INSTALLABILITY_STATUS_UNKNOWN"
+                    }
+                },
+                "capabilities": {},
+                "request": {"internalExperimentFlags": [], "sessionIndex": "1"},
+                "clickTracking": {"clickTrackingParams": "CM4BEKCzAhgAIhMIh6D89oWC7wIVqtlMAh1WwQQN"},
+                "activePlayers": {},
+                "user": {"enableSafetyMode": false}
+            },
+            "enablePersistentPlaylistPanel": true,
+            "tunerSettingValue": "AUTOMIX_SETTING_NORMAL",
+            "videoId": "B1gaZv8P-1w",
+            "playlistId": "RDAMVMB1gaZv8P-1w",
+            "params": "wAEB",
+            "watchEndpointMusicSupportedConfigs": {"watchEndpointMusicConfig": {"musicVideoType": "MUSIC_VIDEO_TYPE_UGC"}},
+            "isAudioOnly": true
+        }
+
+        data['playlistId'] = playListId
+
+        return axios.post(`https://music.youtube.com/youtubei/v1/next?alt=json&key=${this.k}`,data,{headers:this.headers})
+    }
 }
 
 class BrowseData {
@@ -269,7 +315,7 @@ class BrowseData {
 
     }
 
-    getTabs() : Array<Tab>{
+    getTabs(): Array<Tab> {
         let data = this.json['contents']['singleColumnBrowseResultsRenderer']['tabs']
 
         let r: Array<any> = []
@@ -313,7 +359,8 @@ export class Tab {
 
 export class VideoItem {
     json: JSON = JSON.parse('{}')
-    video : Video | null = null
+    video: Video | null = null
+
     constructor(json: JSON) {
         // これはTSがバカ
         // @ts-ignore
@@ -324,7 +371,7 @@ export class VideoItem {
         // @ts-ignore
         if (this.json['navigationEndpoint']['watchEndpoint'] === undefined) {
             console.log("getVideoID NULL")
-        }else{
+        } else {
             // @ts-ignore
             this.video = new Video(this.json['navigationEndpoint']['watchEndpoint']['videoId'])
         }
@@ -373,7 +420,7 @@ export class VideoItem {
         return this.json['navigationEndpoint']['watchEndpoint']['videoId']
     }
 
-    getVideo(): Video | null{
+    getVideo(): Video | null {
         return this.video
     }
 
