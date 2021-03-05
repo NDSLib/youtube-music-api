@@ -1,8 +1,8 @@
 {
   "name": "standard-youtube-music-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Standard Youtube Music API,Now Developing",
-  "main": "index.js",
+  "main": "src/dist/YoutubeMusic.js",
   "scripts": {
     "type::compile": "npx tsc",
     "start": "node src/dist/test.js",
