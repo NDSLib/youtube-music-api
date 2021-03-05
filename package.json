@@ -1,22 +1,25 @@
 {
-  "name": "youtube-music-api",
-  "version": "1.0.0",
-  "description": "",
+  "name": "simple-youtube-music-api",
+  "version": "1.0.1",
+  "description": "Simple Youtube Music API,Now Developing",
   "main": "index.js",
   "scripts": {
-    "type::compile" : "npx tsc",
-    "start": "node src/test.js",
-    "dev" : "npm run type::compile && npm run start"
+    "type::compile": "npx tsc",
+    "start": "node src/dist/test.js",
+    "dev": "npm run type::compile && npm run start",
+    "pack": "npm run type::compile && npm pack",
+    "publish": "npm run type::compile && npm version patch --force && npm publish ./ --access public "
   },
   "keywords": [],
-  "author": "",
+  "author": "bun133_",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^14.14.31",
     "open": "^7.4.2",
-    "typescript": "^4.1.5"
-  },
-  "devDependencies": {
+    "typescript": "^4.1.5",
     "axios": "^0.21.1"
-  }
+  },
+  "files": [
+    "src/dist/"
+  ]
 }
