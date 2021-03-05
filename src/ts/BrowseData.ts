@@ -5,7 +5,7 @@ import {getPlayList, PlayList} from "./PlayList";
 
 export const getBrowseData = async (api: YoutubeMusicAPI) => {
     let data = (await api.getBrowse())['data']
-    // fs.writeFileSync('./browseRes.json', JSON.stringify(data))
+    fs.writeFileSync('./browseRes.json', JSON.stringify(data))
     let tab = data['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]
     let sections = tab['tabRenderer']['content']['sectionListRenderer']['contents']
     // fs.writeFileSync('./browseSections.json', JSON.stringify(sections))
@@ -27,17 +27,71 @@ export const getBrowseData = async (api: YoutubeMusicAPI) => {
         }
     }
 
+    browse.setContinuation(tab['tabRenderer']['content']['sectionListRenderer']['continuations'][0]['nextContinuationData']['continuation'])
+
+    return browse
+}
+
+/**
+ * NON USABLE
+ * @param data
+ * @param api
+ */
+
+export const getContinuation = async (data: BrowseData, api: YoutubeMusicAPI) => {
+    if (data.continuation === null) return undefined
+    let res = (await api.getContinuation(data.continuation))['data']
+    fs.writeFileSync('./browseContinuationsRes.json', JSON.stringify(res))
+    let tab = res['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]
+    let sections = tab['tabRenderer']['content']['sectionListRenderer']['contents']
+    // fs.writeFileSync('./browseSections.json', JSON.stringify(sections))
+    let browse = new BrowseData()
+
+    for (let content in sections) {
+        if (sections[content]['musicCarouselShelfRenderer'] === undefined) {
+            console.log("skipped in BrowseData 1")
+            continue
+        }
+
+        for (let renderer in sections[content]['musicCarouselShelfRenderer']['contents']) {
+            let render = sections[content]['musicCarouselShelfRenderer']['contents'][renderer]['musicTwoRowItemRenderer']
+            if (render === undefined) {
+                console.log("skipped in BrowseData 2")
+                continue
+            }
+            browse.addEntry(new BrowseDataEntry(render))
+        }
+    }
+
+    browse.setContinuation(tab['tabRenderer']['content']['sectionListRenderer']['continuations'][0]['nextContinuationData']['continuation'])
     return browse
 }
 
 export class BrowseData {
     contents: Array<BrowseDataEntry> = []
+    continuation: null | string = null
 
     constructor() {
     }
 
     addEntry(e: BrowseDataEntry) {
         this.contents.push(e)
+    }
+
+    setContinuation(id: string) {
+        this.continuation = id
+    }
+
+    getContinuationID(): string | undefined {
+        if (this.continuation !== null) {
+            return this.continuation
+        }
+
+        return undefined
+    }
+
+    getContinuationData(api: YoutubeMusicAPI) {
+        return getContinuation(this, api)
     }
 }
 
@@ -90,13 +144,22 @@ export class BrowseDataEntry {
         return this.subTitle
     }
 
+    isWatchPointExist(): boolean {
+        // @ts-ignore
+        return this.json['navigationEndpoint']['watchEndpoint'] !== undefined
+    }
+
     getVideoID(): string {
         if (this.videoID !== "") {
             return this.videoID
         }
-
         // @ts-ignore
-        this.videoID = this.json['navigationEndpoint']['watchEndpoint']['videoId']
+        if (this.isWatchPointExist()) {
+            // @ts-ignore
+            this.videoID = this.json['navigationEndpoint']['watchEndpoint']['videoId']
+        } else {
+            this.videoID = ""
+        }
         return this.videoID
     }
 
@@ -105,8 +168,13 @@ export class BrowseDataEntry {
             return this.playlistID
         }
 
-        // @ts-ignore
-        this.playlistID = this.json['navigationEndpoint']['watchEndpoint']['playlistId']
+        if (this.isWatchPointExist()) {
+            // @ts-ignore
+            this.playlistID = this.json['navigationEndpoint']['watchEndpoint']['playlistId']
+        } else {
+            this.playlistID = ""
+        }
+
         return this.playlistID
     }
 
@@ -120,12 +188,17 @@ export class BrowseDataEntry {
         return this.video
     }
 
-    async getPlayList(api: YoutubeMusicAPI): Promise<PlayList> {
+    async getPlayList(api: YoutubeMusicAPI): Promise<null | PlayList> {
         if (this.playlist !== null) {
             return this.playlist
         }
 
-        this.playlist = await getPlayList(this.getPlayListID(), api)
+        if (this.isWatchPointExist()) {
+            this.playlist = await getPlayList(this.getPlayListID(), api)
+        } else {
+            this.playlist = null
+        }
+
         return this.playlist
     }
 }

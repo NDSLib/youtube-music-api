@@ -231,9 +231,9 @@ export class YoutubeMusicAPI {
         return await axios.post(`https://music.youtube.com/youtubei/v1/next?alt=json&key=${this.k}`, data, {headers: this.headers})
     }
 
-    async browse() {
-        return await axios.post(`https://music.youtube.com/youtubei/v1/browse?alt=json&key=${this.k}`, this.browseData, {headers: this.headers})
-    }
+    // async browse() {
+    //     return await axios.post(`https://music.youtube.com/youtubei/v1/browse?alt=json&key=${this.k}`, this.browseData, {headers: this.headers})
+    // }
 
     // async getBrowseData(): Promise<BrowseData> {
     //     return new BrowseData(await this.browse());
@@ -335,6 +335,39 @@ export class YoutubeMusicAPI {
         }
 
         return await axios.post(`https://music.youtube.com/youtubei/v1/browse?alt=json&key=${this.k}`, data, {headers: this.headers})
+    }
+
+    async getContinuation(continuation: string) {
+        let data = {
+            "context": {
+                "client": {
+                    "clientName": "WEB_REMIX",
+                    "clientVersion": "0.1",
+                    "hl": "ja",
+                    "gl": "JP",
+                    "experimentIds": [],
+                    "experimentsToken": "",
+                    "browserName": "Firefox",
+                    "browserVersion": "87.0",
+                    "osName": "Windows",
+                    "osVersion": "10.0",
+                    "platform": "DESKTOP",
+                    "utcOffsetMinutes": 540,
+                    "locationInfo": {"locationPermissionAuthorizationStatus": "LOCATION_PERMISSION_AUTHORIZATION_STATUS_UNSUPPORTED"},
+                    "musicAppInfo": {
+                        "musicActivityMasterSwitch": "MUSIC_ACTIVITY_MASTER_SWITCH_INDETERMINATE",
+                        "musicLocationMasterSwitch": "MUSIC_LOCATION_MASTER_SWITCH_INDETERMINATE",
+                        "pwaInstallabilityStatus": "PWA_INSTALLABILITY_STATUS_UNKNOWN"
+                    }
+                },
+                "capabilities": {},
+                "request": {"internalExperimentFlags": [], "sessionIndex": "1"},
+                "activePlayers": {},
+                "user": {"enableSafetyMode": false}
+            }
+        }
+
+        return await axios.post(`https://music.youtube.com/youtubei/v1/browse?alt=json&type=next&key=${this.k}&ctoken=${continuation}&continuation=${continuation}`, data, {headers: this.headers})
     }
 }
 
