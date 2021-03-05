@@ -1,7 +1,7 @@
 {
-  "name": "simple-youtube-music-api",
-  "version": "1.0.1",
-  "description": "Simple Youtube Music API,Now Developing",
+  "name": "standard-youtube-music-api",
+  "version": "1.0.2",
+  "description": "Standard Youtube Music API,Now Developing",
   "main": "index.js",
   "scripts": {
     "type::compile": "npx tsc",
