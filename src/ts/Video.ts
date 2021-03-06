@@ -33,7 +33,7 @@ export class Video {
     }
 }
 
-class VideoDetail {
+export class VideoDetail {
     json: any = {}
 
     constructor(json: any) {
@@ -60,5 +60,3 @@ class VideoDetail {
         return this.json['thumbnail']['thumbnails']
     }
 }
-
-module.exports = {Video, VideoDetail}

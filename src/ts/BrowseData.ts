@@ -1,11 +1,14 @@
 import {YoutubeMusicAPI} from "./YoutubeMusic";
-import * as fs from "fs";
+// import * as fs from "fs";
 import {Video} from "./Video";
 import {getPlayList, PlayList} from "./PlayList";
 
-export const getBrowseData = async (api: YoutubeMusicAPI) => {
+export const getBrowseData = async (api: YoutubeMusicAPI) : Promise<BrowseData> => {
     let data = (await api.getBrowse())['data']
-    fs.writeFileSync('./browseRes.json', JSON.stringify(data))
+    return parseBrowseData(data)
+}
+
+export const parseBrowseData = (data:any) : BrowseData => {
     let tab = data['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]
     let sections = tab['tabRenderer']['content']['sectionListRenderer']['contents']
     // fs.writeFileSync('./browseSections.json', JSON.stringify(sections))
@@ -41,7 +44,7 @@ export const getBrowseData = async (api: YoutubeMusicAPI) => {
 export const getContinuation = async (data: BrowseData, api: YoutubeMusicAPI) => {
     if (data.continuation === null) return undefined
     let res = (await api.getContinuation(data.continuation))['data']
-    fs.writeFileSync('./browseContinuationsRes.json', JSON.stringify(res))
+    // fs.writeFileSync('./browseContinuationsRes.json', JSON.stringify(res))
     let tab = res['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]
     let sections = tab['tabRenderer']['content']['sectionListRenderer']['contents']
     // fs.writeFileSync('./browseSections.json', JSON.stringify(sections))

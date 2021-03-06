@@ -3,8 +3,12 @@ import {YoutubeMusicAPI} from "./YoutubeMusic";
 import {Video} from "./Video";
 
 export const getPlayList = async (playListId: string, api: YoutubeMusicAPI): Promise<PlayList> => {
-    let data = (await api.getPlayList(playListId))['data']['contents']['singleColumnMusicWatchNextResultsRenderer']['tabbedRenderer']['watchNextTabbedResultsRenderer']['tabs'][0] //歌詞は1
-    // fs.writeFileSync('./playlistRes.json', JSON.stringify(data))
+    let data = (await api.getPlayList(playListId))['data'] //歌詞は1
+    return parsePlayList(data)
+}
+
+export const parsePlayList = (d:any) : PlayList => {
+    let data = d['contents']['singleColumnMusicWatchNextResultsRenderer']['tabbedRenderer']['watchNextTabbedResultsRenderer']['tabs'][0] //歌詞は1
     let playList = new PlayList()
     if (data['tabRenderer']['title'] !== "次の曲") {
         console.log("WARN:getPlayList:次の曲取得できず")

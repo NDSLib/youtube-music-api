@@ -1,71 +1,84 @@
 const axios = require('axios')
 const video_js = require('./Video')
 
-// @ts-ignore
-import Video from './Video.js'
-import {AdaptiveFormatsJSON, FormatsJSON} from './JSONCollection'
+import {Video} from './Video'
+import {getBrowseData, BrowseData} from './BrowseData'
+import {getPlayList, PlayList} from './PlayList'
+import {AdaptiveFormatsJSON, FormatsJSON, parseAdaptiveFormats, parseFormats} from './JSONCollection'
 
 export class YoutubeMusicAPI {
     playerData = {
-        "videoId": "Rkrm5foi188",
-        "playlistId": "RDAMVMRkrm5foi188",
+        "videoId": "mwnu2aP0Q8g",
         "context": {
             "client": {
                 "hl": "ja",
                 "gl": "JP",
-                "visitorData": "CgtnWXVtd0c1eUZUOCizjbGBBg%3D%3D",
+                "remoteHost": "113.39.146.225",
+                "deviceMake": "",
+                "deviceModel": "",
+                "visitorData": "CgtnWXVtd0c1eUZUOCjQ5I2CBg%3D%3D",
+                "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0,gzip(gfe)",
                 "clientName": "WEB_REMIX",
                 "clientVersion": "0.1",
                 "osName": "Windows",
                 "osVersion": "10.0",
+                "originalUrl": "https://music.youtube.com/",
                 "platform": "DESKTOP",
                 "clientFormFactor": "UNKNOWN_FORM_FACTOR",
-                "userInterfaceTheme": "USER_INTERFACE_THEME_DARK",
-                "clientScreen": "WATCH_FULL_SCREEN",
+                "timeZone": "Asia/Tokyo",
+                "browserName": "Firefox",
+                "browserVersion": "87.0",
+                "screenWidthPoints": 1920,
+                "screenHeightPoints": 966,
+                "screenPixelDensity": 1,
+                "screenDensityFloat": 1,
+                "utcOffsetMinutes": 540,
+                "userInterfaceTheme": "USER_INTERFACE_THEME_LIGHT",
                 "playerType": "UNIPLAYER",
-                "tvAppInfo": {"livingRoomAppMode": "LIVING_ROOM_APP_MODE_UNSPECIFIED"}
+                "tvAppInfo": {"livingRoomAppMode": "LIVING_ROOM_APP_MODE_UNSPECIFIED"},
+                "clientScreen": "WATCH_FULL_SCREEN"
             },
             "user": {"lockedSafetyMode": false},
             "request": {"useSsl": true, "internalExperimentFlags": [], "consistencyTokenJars": []},
-            "clickTracking": {"clickTrackingParams": "CO0BEKCzAhgAIhMI193Jzrnv7gIVg4XCCh05Ywxl"},
-            "clientScreenNonce": "MC41MzI4NjczNzg1MjA0ODg0",
+            "clickTracking": {"clickTrackingParams": "CMsBEKCzAhgAIhMI-qWhytKb7wIV08VMAh2-Rg6k"},
+            "clientScreenNonce": "MC42OTIxOTg1MTM3NzEyMTA0",
             "adSignalsInfo": {
-                // "params": [
-                // {"key": "dt", "value": "1613514422701"}, {
-                //     "key": "flash",
-                //     "value": "0"
-                // }, {"key": "frm", "value": "0"}, {"key": "u_tz", "value": "540"}, {
-                //     "key": "u_his",
-                //     "value": "4"
-                // }, {"key": "u_java", "value": "false"}, {"key": "u_h", "value": "1080"}, {
-                //     "key": "u_w",
-                //     "value": "1920"
-                // }, {"key": "u_ah", "value": "1040"}, {"key": "u_aw", "value": "1920"}, {
-                //     "key": "u_cd",
-                //     "value": "24"
-                // }, {"key": "u_nplug", "value": "0"}, {"key": "u_nmime", "value": "0"}, {
-                //     "key": "bc",
-                //     "value": "31"
-                // }, {"key": "bih", "value": "966"}, {"key": "biw", "value": "1903"}, {
-                //     "key": "brdim",
-                //     "value": "-1928,-331,-1928,-331,1920,-323,1936,1056,1920,966"
-                // }, {"key": "vis", "value": "1"}, {"key": "wgl", "value": "true"}, {
-                //     "key": "ca_type",
-                //     "value": "image"
-                // }]
+                "params": [{"key": "dt", "value": "1615032914708"}, {
+                    "key": "flash",
+                    "value": "0"
+                }, {"key": "frm", "value": "0"}, {"key": "u_tz", "value": "540"}, {
+                    "key": "u_his",
+                    "value": "3"
+                }, {"key": "u_java", "value": "false"}, {"key": "u_h", "value": "1080"}, {
+                    "key": "u_w",
+                    "value": "1920"
+                }, {"key": "u_ah", "value": "1040"}, {"key": "u_aw", "value": "1920"}, {
+                    "key": "u_cd",
+                    "value": "24"
+                }, {"key": "u_nplug", "value": "0"}, {"key": "u_nmime", "value": "0"}, {
+                    "key": "bc",
+                    "value": "31"
+                }, {"key": "bih", "value": "966"}, {"key": "biw", "value": "1903"}, {
+                    "key": "brdim",
+                    "value": "-1928,-331,-1928,-331,1920,-323,1936,1056,1920,966"
+                }, {"key": "vis", "value": "1"}, {"key": "wgl", "value": "true"}, {"key": "ca_type", "value": "image"}]
             }
         },
         "playbackContext": {
             "contentPlaybackContext": {
                 "html5Preference": "HTML5_PREF_WANTS",
-                "lactMilliseconds": "27",
+                "lactMilliseconds": "35",
                 "referer": "https://music.youtube.com/",
-                "signatureTimestamp": 18669,
+                "signatureTimestamp": 18690,
                 "autoCaptionsDefaultOn": false,
-                "liveContext": {"startWalltime": "0"}
+                "liveContext": {"startWalltime": "0"},
+                "playerWidthPixels": 402,
+                "playerHeightPixels": 226
             }
         },
-        "cpn": "isAtEBxDCnGENsfx"
+        "cpn": "aS88h3HE_NboJOqm",
+        "playlistId": "RDAMVMmwnu2aP0Q8g",
+        "captionParams": {}
     }
 
     headers = {
@@ -73,7 +86,7 @@ export class YoutubeMusicAPI {
         'Accept': '*/*',
         'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3',
         'Content-Type': 'application/json',
-        'Authorization': 'SAPISIDHASH 1613514453_4f36c22cb48286e16a34c27b6d8c14475a0cf590',
+        'Authorization': 'SAPISIDHASH 1615033007_15cb87896bc56f28896f174584a64007a8c893f5',
         'X-Goog-AuthUser': '1',
         'DNT': '1',
         'Connection': 'keep-alive',
@@ -196,15 +209,7 @@ export class YoutubeMusicAPI {
         }
     }
 
-    k: String = ''
-
-
-    /**
-     * @param key(string)
-     */
-    constructor(key: String) {
-        this.k = key
-    }
+    k: String = 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30'
 
     async player(videoId: String) {
         let data = JSON.parse(JSON.stringify(this.playerData))
@@ -214,15 +219,12 @@ export class YoutubeMusicAPI {
 
     async getFormats(videoId: String): Promise<FormatsJSON | null> {
         let res = await this.player(videoId)
-        if (res['data']['streamingData'] === undefined) {
-            return null
-        }
-        return new FormatsJSON(res['data']['streamingData']['formats'])
+        return parseFormats(res)
     }
 
     async getAdaptiveFormats(videoId: String): Promise<AdaptiveFormatsJSON> {
         let res = await this.player(videoId)
-        return new AdaptiveFormatsJSON(res['data']['streamingData']['adaptiveFormats'])
+        return parseAdaptiveFormats(res)
     }
 
     async next(videoId: String) {
@@ -249,7 +251,11 @@ export class YoutubeMusicAPI {
 
     async searchVideos(query: String): Promise<Array<Video>> {
         let data = await this.search(query)
-        let c = data['data']['contents']['sectionListRenderer']['contents']
+        return this.parseSearchResults(data['data'])
+    }
+
+    parseSearchResults(data: any): Array<Video> {
+        let c = data['contents']['sectionListRenderer']['contents']
         let videos = []
         for (let i in c) {
             let d = c[i]['musicShelfRenderer']['contents']
@@ -261,7 +267,6 @@ export class YoutubeMusicAPI {
         }
         return videos
     }
-
 
     async getPlayList(playListId: string) {
         let data = {
@@ -304,6 +309,10 @@ export class YoutubeMusicAPI {
         return axios.post(`https://music.youtube.com/youtubei/v1/next?alt=json&key=${this.k}`, data, {headers: this.headers})
     }
 
+    async getPlayListData(id: string): Promise<PlayList> {
+        return await getPlayList(id, this)
+    }
+
     async getBrowse() {
         let data = {
             "context": {
@@ -335,6 +344,10 @@ export class YoutubeMusicAPI {
         }
 
         return await axios.post(`https://music.youtube.com/youtubei/v1/browse?alt=json&key=${this.k}`, data, {headers: this.headers})
+    }
+
+    async getBrowseData(): Promise<BrowseData> {
+        return await getBrowseData(this)
     }
 
     async getContinuation(continuation: string) {
@@ -371,7 +384,7 @@ export class YoutubeMusicAPI {
     }
 }
 
-class BrowseData {
+/*class BrowseData {
     json: any = {}
 
     constructor(json: any) {
@@ -493,5 +506,5 @@ export class VideoItem {
         return this.json['navigationEndpoint']['watchEndpoint']['playlistId']
     }
 }
-
+*/
 module.exports = {YoutubeMusicAPI}

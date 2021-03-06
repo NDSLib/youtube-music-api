@@ -1,16 +1,14 @@
 import {Video} from './Video'
 import open from "open";
-import {Tab, VideoItem} from './YoutubeMusic'
 import {getPlayList} from "./PlayList";
 import {getBrowseData} from "./BrowseData";
-import * as fs from "fs";
+// import * as fs from "fs";
 import axios from "axios";
 
 const youtubeMusicAPI = require('./YoutubeMusic')
 const video_js = require('./Video')
-const video = new video_js.Video('xrDruN69QCw')
-const k = require('./config').key
-const api = new youtubeMusicAPI.YoutubeMusicAPI(k)
+const video = new video_js.Video('1tk1pqwrOys')
+const api = new youtubeMusicAPI.YoutubeMusicAPI()
 
 async function main() {
     let next = await video.next(api)
@@ -20,6 +18,7 @@ async function main() {
     // let player = await video.getFormats(api)
     // console.log('format res')
     // console.log(player?.getFormatURL())
+    console.log((await api.player('1tk1pqwrOys'))['data']['streamingData'])
 
     // 動画IDからサムネイル取得
     // PASSED!
@@ -51,13 +50,13 @@ async function main() {
     // }
 
     //新Browse
-    let browse = await getBrowseData(api)
-    browse.contents.forEach((it) => {
-        console.log(`Title:${it.getTitle()}`)
-        console.log(`SubTitle:${it.getSubTitle()}`)
-        console.log(`VideoID:${it.getVideoID()}`)
-        console.log(`PlayListID:${it.getPlayListID()}`)
-    })
+    // let browse = await getBrowseData(api)
+    // browse.contents.forEach((it) => {
+    //     console.log(`Title:${it.getTitle()}`)
+    //     console.log(`SubTitle:${it.getSubTitle()}`)
+    //     console.log(`VideoID:${it.getVideoID()}`)
+    //     console.log(`PlayListID:${it.getPlayListID()}`)
+    // })
     // console.log(`Continuation ID:${browse.getContinuationID()}`)
     // let continuation = await browse.getContinuationData(api)
     // console.log(continuation)
