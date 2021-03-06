@@ -1,6 +1,6 @@
 {
   "name": "standard-youtube-music-api",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Standard Youtube Music API,Now Developing",
   "main": "src/dist/YoutubeMusic.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "node src/dist/test.js",
     "dev": "npm run type::compile && npm run start",
     "pack": "npm run type::compile && npm pack",
-    "publish": "npm run type::compile && npm version patch --force"
+    "update": "npm run type::compile && npm version patch --force && npm publish ./"
   },
   "keywords": [],
   "author": "bun133_",
