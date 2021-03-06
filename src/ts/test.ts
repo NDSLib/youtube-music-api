@@ -4,21 +4,22 @@ import {getPlayList} from "./PlayList";
 import {getBrowseData} from "./BrowseData";
 // import * as fs from "fs";
 import axios from "axios";
+import {getSearch, getSearchData, SearchEntry} from "./Search";
 
-const youtubeMusicAPI = require('./YoutubeMusic')
-const video_js = require('./Video')
-const video = new video_js.Video('1tk1pqwrOys')
-const api = new youtubeMusicAPI.YoutubeMusicAPI()
-
-async function main() {
-    let next = await video.next(api)
+// const youtubeMusicAPI = require('./YoutubeMusic')
+// const video_js = require('./Video')
+// const video = new video_js.Video('1tk1pqwrOys')
+// const api = new youtubeMusicAPI.YoutubeMusicAPI()
+//
+// async function main() {
+    // let next = await video.next(api)
 
     // 直リン取得
     // PASSED!
     // let player = await video.getFormats(api)
     // console.log('format res')
     // console.log(player?.getFormatURL())
-    console.log((await api.player('1tk1pqwrOys'))['data']['streamingData'])
+    // console.log((await api.player('1tk1pqwrOys'))['data']['streamingData'])
 
     // 動画IDからサムネイル取得
     // PASSED!
@@ -61,6 +62,31 @@ async function main() {
     // let continuation = await browse.getContinuationData(api)
     // console.log(continuation)
 
+// }
+//
+// main().then(r => console.log('END'))
+
+
+async function searchTest(query:string){
+    const youtube = require('./YoutubeMusic')
+    const api = new youtube.YoutubeMusicAPI()
+    let data = await getSearch(api,query)
+    // @ts-ignore
+    // console.log(data['data'])
+    data.forEach((it)=>{
+        console.log(`SearchEntry Title:${it.getTitle()}`)
+        it.getItems()
+            .filter((i)=>{
+                return i.isVideo()
+            })
+            .forEach((i)=>{
+            console.log(`SearchItem Title:${i.getTitle()}`)
+            console.log(`SearchItem SubTitle:${i.getSubTitle()}`)
+            console.log(`SearchItem VideoId:${i.getVideoID()}`)
+        })
+    })
 }
 
-main().then(r => console.log('END'))
+searchTest('マオ').then(r => {
+    console.log('END')
+})

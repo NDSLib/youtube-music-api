@@ -1,12 +1,14 @@
 const axios = require('axios')
 const video_js = require('./Video')
+const sha1 = require('sha1')
 
 import {Video} from './Video'
-import {getBrowseData, BrowseData} from './BrowseData'
+import {BrowseData, getBrowseData} from './BrowseData'
 import {getPlayList, PlayList} from './PlayList'
 import {AdaptiveFormatsJSON, FormatsJSON, parseAdaptiveFormats, parseFormats} from './JSONCollection'
 
 export class YoutubeMusicAPI {
+
     playerData = {
         "videoId": "mwnu2aP0Q8g",
         "context": {
@@ -80,7 +82,6 @@ export class YoutubeMusicAPI {
         "playlistId": "RDAMVMmwnu2aP0Q8g",
         "captionParams": {}
     }
-
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0',
         'Accept': '*/*',
@@ -96,7 +97,6 @@ export class YoutubeMusicAPI {
         'Cache-Control': 'no-cache',
         'TE': 'Trailers',
     }
-
     nextData = {
         "context": {
             "client": {
@@ -133,7 +133,6 @@ export class YoutubeMusicAPI {
         "watchEndpointMusicSupportedConfigs": {"watchEndpointMusicConfig": {"musicVideoType": "MUSIC_VIDEO_TYPE_OMV"}},
         "isAudioOnly": true
     }
-
     browseData = {
         "context": {
             "client": {
@@ -162,8 +161,6 @@ export class YoutubeMusicAPI {
             "user": {"enableSafetyMode": false}
         }, "browseId": "FEmusic_home"
     }
-
-
     searchData = {
         "context": {
             "client": {
@@ -208,8 +205,53 @@ export class YoutubeMusicAPI {
             "lastEditTimeMsec": 17822
         }
     }
-
     k: String = 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30'
+
+    generateHeader(isAuthed:boolean) {
+        let data = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0',
+            'Accept': '*/*',
+            'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3',
+            // 'Accept-Encoding': 'gzip, deflate, br',
+            'Content-Type': 'application/json',
+            'Content-Length': '730',
+            'X-Goog-Visitor-Id': 'CgtnWXVtd0c1eUZUOCiV-I2CBg%3D%3D',
+            'X-Goog-AuthUser': '1',
+            'X-Goog-PageId': 'undefined',
+            'x-origin': 'https://music.youtube.com',
+            'X-YouTube-Client-Name': '67',
+            'X-YouTube-Client-Version': '0.1',
+            'X-YouTube-Device': 'cbr=Firefox&cbrver=87.0&ceng=Gecko&cengver=87.0&cos=Windows&cosver=10.0&cplatform=DESKTOP',
+            'X-Youtube-Identity-Token': 'QUFFLUhqbDdLeWc3YmJ3czFMNWQxSEYzOTc3Njc5eGJEd3w=',
+            'X-YouTube-Page-CL': '360176471',
+            'X-YouTube-Page-Label': 'youtube.music.web.client_20210301_00_RC00',
+            'X-YouTube-Utc-Offset': '540',
+            'X-YouTube-Time-Zone': 'Asia/Tokyo',
+            'X-YouTube-Ad-Signals': 'dt=1615035414765&flash=0&frm&u_tz=540&u_his=2&u_java&u_h=1080&u_w=1920&u_ah=1040&u_aw=1920&u_cd=24&u_nplug&u_nmime&bc=31&bih=966&biw=1903&brdim=-1928%2C-331%2C-1928%2C-331%2C1920%2C-323%2C1936%2C1056%2C1920%2C966&vis=1&wgl=true&ca_type=image',
+            'Origin': 'https://music.youtube.com',
+            'DNT': '1',
+            'Referer': 'https://music.youtube.com/',
+            'Connection': 'keep-alive',
+            'Cookie': 'VISITOR_INFO1_LIVE=gYumwG5yFT8; CONSENT=YES+JP.ja+202001; SID=6gfW18qBD-XygZ1f7zwjNGdeal7WlgKlvhp1gUdz3i1fIWzpnRY9F5hYPucdGOhzRoJTog.; __Secure-3PSID=6gfW18qBD-XygZ1f7zwjNGdeal7WlgKlvhp1gUdz3i1fIWzpVFAGof-lV8ldYz9ry5vmnA.; HSID=Aa1nhmAXl9YD4eo1N; SSID=ADWy5fQPU-6EKg_Pf; APISID=zSE_nTBkGhFW0QSZ/ALHgW0Q5AyyuY7x3b; SAPISID=qrIvLm_YnZJ28xJv/AZ4AV_tqLJE7OU7jU; __Secure-3PAPISID=qrIvLm_YnZJ28xJv/AZ4AV_tqLJE7OU7jU; LOGIN_INFO=AFmmF2swRgIhAKzRuRStAny-o8fPopm7GXShM8fkOrb_uIdKQ0e6xbCFAiEA8GboMMaSmvq6TvTddKNdLsT1hBKrBgSTaU8sejr3NPY:QUQ3MjNmelBUcThfX2FSa1h4N1FMTS1MOXVESVBnd1lZVU5yQXlSTHYycG1MTDZuM2ZUVEVxdDQ0Vm1ZLXZ0UktoT2pXMzNrVGJSdU40OWpBUWhUOFM5ODlFNUdRQWgtNTR1b0J2bC1yRzVVSHYzcXdTeW11RjNhYXE0Q0EtaTVpWEdoWVljMy1pV1V4OGxMTTlZc0s0czg0UmZKOTRDOXQxS2pXSkFLYnlKcVJFUHo2bFVNWE5j; SIDCC=AJi4QfHYZjWnbdkRALiQLBPlFjPyXGy2XUkiaoVt2tBs2K4ZEF68gcLCTB_5U4Te8VVzeUhz6fI; __Secure-3PSIDCC=AJi4QfEigd_MUkT5ZM-j9Ff7RMVQc3p6eS5LI5449ECEB2pwjYtb9yDFGmAvNBjdNATlK1QnfbqR; PREF=f6=80800&volume=20&tz=Asia.Tokyo&repeat=NONE; YSC=loSq1Jnr_u4; wide=1',
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            'TE': 'Trailers'
+        }
+        if(isAuthed){
+            // @ts-ignore
+            data['Authorization'] = `SAPISIDHASH ${sha1(new Date().getTime() + " " + "SAPISID" + " " + "https://music.youtube.com/")}`
+        }
+        return data
+    }
+
+    async post(
+        endPoint: string,
+        data: any,
+        isAuthed:boolean,
+        tags?: string
+    ) {
+        return await axios.post(`https://music.youtube.com/youtubei/v1/${endPoint}?key=${this.k}${tags}`, data, {headers: this.generateHeader(isAuthed)})
+    }
 
     async player(videoId: String) {
         let data = JSON.parse(JSON.stringify(this.playerData))
