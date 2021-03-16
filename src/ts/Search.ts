@@ -1,5 +1,4 @@
 import {YoutubeMusicAPI} from './YoutubeMusic'
-import * as fs from "fs";
 
 export const getSearch = async (api: YoutubeMusicAPI, query: string): Promise<Array<SearchEntry>> => {
     let data = await getSearchData(api, query)
@@ -42,7 +41,7 @@ export const getSearchData = async (api: YoutubeMusicAPI, query: string) => {
             "clientName": "youtube-music",
             "searchMethod": "ENTER_KEY",
             "inputMethod": "KEYBOARD",
-            "originalQuery": query,
+            "originalQuery": "",
             "availableSuggestions": [{"index": 0, "type": 25}, {"index": 1, "type": 0}, {
                 "index": 2,
                 "type": 0
@@ -87,6 +86,20 @@ export class SearchEntry {
         }
         return arr
     }
+
+    getFirstItem(): SearchItem {
+        return this.getItems()[0]
+    }
+
+    getFirstVideo(): SearchItem | undefined {
+        let filtered = this.getItems().filter((it) => {
+            it.isVideo()
+        })
+        if (filtered.length != 0) {
+            return filtered[0]
+        }
+        return undefined
+    }
 }
 
 /**
@@ -128,13 +141,13 @@ export class SearchItem {
         return undefined
     }
 
-    getVideoID(): string | undefined{
+    getVideoID(): string | undefined {
         if (this.getBaseViewBranch() === undefined) return undefined
         // @ts-ignore
         return this.getBaseViewBranch()['videoId']
     }
 
-    getPlayListID(): string | undefined{
+    getPlayListID(): string | undefined {
         if (this.getBaseViewBranch() === undefined) return undefined
         // @ts-ignore
         return this.getBaseViewBranch()['playlistId']

@@ -3,7 +3,6 @@ const video_js = require('./Video')
 const sha1 = require('sha1')
 
 import {Video} from './Video'
-import {BrowseData, getBrowseData} from './BrowseData'
 import {getPlayList, PlayList} from './PlayList'
 import {AdaptiveFormatsJSON, FormatsJSON, parseAdaptiveFormats, parseFormats} from './JSONCollection'
 
@@ -386,10 +385,6 @@ export class YoutubeMusicAPI {
         }
 
         return await axios.post(`https://music.youtube.com/youtubei/v1/browse?alt=json&key=${this.k}`, data, {headers: this.headers})
-    }
-
-    async getBrowseData(): Promise<BrowseData> {
-        return await getBrowseData(this)
     }
 
     async getContinuation(continuation: string) {

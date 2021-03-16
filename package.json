@@ -24,5 +24,6 @@
   },
   "files": [
     "src/dist/"
-  ]
+  ],
+  "homepage": "https://github.com/NDSLib/youtube-music-api"
 }
